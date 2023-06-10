@@ -1,0 +1,93 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "debian-openssl-1.1.x", "linux-musl", "linux-musl-openssl-3.0.x"]
+}
+
+enum UserRole {
+  STUDENT
+  ADMIN
+}
+
+//models for user roles
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  password  String
+  role      UserRole @default(STUDENT)
+  createdAt DateTime @default(now())
+
+  tests       TestResult[]
+  enrollments CourseEnrollment[]
+
+  @@map("users")
+}
+
+model Test {
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+
+  createdAt DateTime     @default(now())
+  //relations
+  results   TestResult[]
+  course    Course?      @relation(fields: [courseId], references: [id])
+  courseId  Int?
+}
+
+model TestResult {
+  id        Int      @id @default(autoincrement())
+  result    Int
+  createdAt DateTime @default(now())
+
+  testId Int
+  userId Int
+  test   Test @relation(fields: [testId], references: [id])
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Course {
+  id         Int    @id @default(autoincrement())
+  courseName String
+  credits    Int
+
+  courseStudents String[]
+  slug           String
+
+  createdAt DateTime @default(now())
+
+  tests       Test[]
+  enrollments CourseEnrollment[]
+}
+
+model CourseEnrollment {
+  id        Int      @id @default(autoincrement())
+  createdAt DateTime @default(now())
+
+  courseId Int
+  userId   Int
+  user     User   @relation(fields: [userId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+}
+
+//extra models
+model Class {
+  id        Int    @id @default(autoincrement())
+  className String
+  slug      String
+}
+
+model Student {
+  id            Int      @id @default(autoincrement())
+  studentName   String
+  studentAge    Int
+  studentClass  String
+  studentCourse String[]
+  slug          String
+}

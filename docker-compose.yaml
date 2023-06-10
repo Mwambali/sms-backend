@@ -1,0 +1,38 @@
+version: '3.9'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      POSTGRES_HOST: db
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: prisma
+      POSTGRES_DB: my_app
+      PORT: 5000
+    volumes:
+      - .:/usr/src/app
+    ports:
+      - '5000:5000'
+    depends_on:
+      - db
+  db:
+    image: postgres:15.2
+    restart: always
+    environment:
+      POSTGRES_USER: prisma
+      POSTGRES_PASSWORD: prisma
+      POSTGRES_DB: my_app
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - '5432:5432'
+
+volumes:
+  postgres:
+
+    # docker-compose run app psql -h db -p 5432 -U prisma -d my_app_db
+
+
