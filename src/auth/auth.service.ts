@@ -1,5 +1,5 @@
 import { User } from '@prisma/client';
-import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable, Res, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -61,7 +61,7 @@ export class AuthService {
 
   };
 
-  async login(loginDto: LoginDto): Promise<{ token: string } | null> {
+  async login(loginDto: LoginDto, @Res() response: Response): Promise<{ token: string } | null> {
     const user = await this.validateUser(loginDto.email, loginDto.password);
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
