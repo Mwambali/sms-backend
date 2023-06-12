@@ -5,7 +5,9 @@ import {
   HttpCode,
   HttpStatus,
   Post,
+  Req,
   Request,
+  Res,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
@@ -17,6 +19,8 @@ import { RegisterDto } from './dto/register.dto';
 import { Roles } from './decorators/roles.decorator';
 import { RolesGuard } from './guards/roles.guard';
 import { LoginDto } from './dto/login.dto';
+import { Response } from 'express';
+
 
 @Controller('auth')
 export class AuthController {
@@ -32,10 +36,13 @@ export class AuthController {
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  async login(@Body() user: LoginDto) {
+  async login(@Req() user: LoginDto, @Res() response: Response) {
     // return req.user;
     const token = await this.authService.login(user);
-    return { token };
+    response.header('Authorization', `Bearer ${token}`);
+    // return { token };
+    user.password = undefined;
+    return response.send(user);
   }
 
   //an authenticated route
