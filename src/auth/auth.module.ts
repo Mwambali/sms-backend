@@ -10,6 +10,7 @@ import { AuthController } from './auth.controller';
 import { LocalStrategy } from './jwt/local.strategy';
 import { UsersModule } from 'src/users/users.module';
 import { async } from 'rxjs';
+import { JwtAuthGuard } from 'common/guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -25,7 +26,7 @@ import { async } from 'rxjs';
       }),
     }),
   ],
-  providers: [AuthService, LocalStrategy, PrismaService],
+  providers: [AuthService, LocalStrategy, PrismaService, JwtStrategy, JwtAuthGuard],
   controllers: [AuthController],
   exports: [AuthService],
 })

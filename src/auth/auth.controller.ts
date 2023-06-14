@@ -37,10 +37,9 @@ export class AuthController {
   // @UseGuards(LocalAuthGuard)
   // @Post('login')
   // async login(@Req() user: LoginDto, @Res() response: Response) {
-  //   // return req.user;
-  //   const token = await this.authService.login(user);
+
+  //   const { token } = await this.authService.login(user);
   //   response.header('Authorization', `Bearer ${token}`);
-  //   // return { token };
   //   user.password = undefined;
   //   return response.send(user);
   // }
@@ -59,9 +58,10 @@ export class AuthController {
     return req.user;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('verify-jwt')
   @HttpCode(HttpStatus.OK)
-  verifyJwt(@Body() payload: { jwt: string }) {
+  async verifyJwt(@Body() payload: { jwt: string }) {
     return this.authService.verifyJwt(payload.jwt);
   }
 }
