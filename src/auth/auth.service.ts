@@ -9,13 +9,15 @@ import { RegisterDto } from './dto/register.dto';
 import { encodePassword } from './utils/bcrypt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { LoginDto } from './dto/login.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     private prisma: PrismaService,
     private jwtService: JwtService,
-    private userService: UserService
+    private userService: UserService,
+    private configService: ConfigService
   ) { }
 
   async validateUser(email: string, password: string): Promise<User> {
@@ -76,9 +78,15 @@ export class AuthService {
     if (!jwt) {
       throw new UnauthorizedException();
     }
+    console.log(jwt);
+
 
     try {
-      const { exp } = await this.jwtService.verifyAsync(jwt);
+      const secret = this.configService.get<string>('JWT_SECRET');
+
+      const { exp } = await this.jwtService.verifyAsync(jwt, { secret });
+      console.log(exp);
+
       return { exp };
     } catch (error) {
       throw new HttpException('Invalid JWT', HttpStatus.UNAUTHORIZED);
