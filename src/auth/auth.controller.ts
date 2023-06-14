@@ -34,15 +34,21 @@ export class AuthController {
     return await this.authService.registerUser(userRegister)
   }
 
-  @UseGuards(LocalAuthGuard)
+  // @UseGuards(LocalAuthGuard)
+  // @Post('login')
+  // async login(@Req() user: LoginDto, @Res() response: Response) {
+
+  //   const { token } = await this.authService.login(user);
+  //   response.header('Authorization', `Bearer ${token}`);
+  //   user.password = undefined;
+  //   return response.send(user);
+  // }
+
   @Post('login')
-  async login(@Req() user: LoginDto, @Res() response: Response) {
-    // return req.user;
-    const token = await this.authService.login(user);
-    response.header('Authorization', `Bearer ${token}`);
-    // return { token };
-    user.password = undefined;
-    return response.send(user);
+  async login(@Body() user: LoginDto): Promise<{ token: string }> {
+    const { token } = await this.authService.login(user);
+
+    return { token }
   }
 
   //an authenticated route
@@ -52,9 +58,10 @@ export class AuthController {
     return req.user;
   }
 
+  @UseGuards(JwtAuthGuard)
   @Post('verify-jwt')
   @HttpCode(HttpStatus.OK)
-  verifyJwt(@Body() payload: { jwt: string }) {
+  async verifyJwt(@Body() payload: { jwt: string }) {
     return this.authService.verifyJwt(payload.jwt);
   }
 }
