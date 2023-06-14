@@ -22,7 +22,7 @@ export class AuthGuard implements CanActivate {
         const authHeaderParts = (authHeader as string).split(' ');
 
         if (authHeaderParts.length !== 2) {
-            return false;
+            throw new UnauthorizedException();
         }
 
         const [, jwt] = authHeaderParts;
@@ -32,13 +32,16 @@ export class AuthGuard implements CanActivate {
                 if (!exp) {
                     return of(false);
                 }
+                console.log(exp);
 
                 const TOKEN_EXP_MS = exp * 1000;
                 const isJwtValid = Date.now() < TOKEN_EXP_MS;
 
                 return of(isJwtValid);
             }),
-            catchError(() => {
+            catchError((error) => {
+                console.error('Error during switchMap:', error);
+
                 throw new UnauthorizedException();
             }),
         );
