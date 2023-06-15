@@ -47,39 +47,3 @@ export class AuthGuard implements CanActivate {
         );
     }
 }
-
-
-
-
-
-// import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
-// import { Observable } from "rxjs";
-// import { AuthService } from "../auth.service";
-
-// @Injectable()
-// export class AuthGuard implements CanActivate {
-//     constructor(private authService: AuthService) { }
-
-//     canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-//         if (context.getType() !== 'http') {
-//             return false
-//         }
-
-//         const authHeader = context.switchToHttp().getRequest().headers[
-//             'authorization'
-//         ] as string;
-//         if (!authHeader) {
-//             return false
-//         }
-//         const authHeaderParts = authHeader.split('');
-//         if (authHeaderParts.length !== 2) {
-//             return false
-//         }
-//         const [, jwt] = authHeaderParts
-
-//         return this.authService.verifyJwt(jwt)
-//             .then(() => true)
-//             .catch(() => false);
-//     }
-
-// }
