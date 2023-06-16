@@ -28,7 +28,4 @@ export class RolesGuard implements CanActivate {
         return false //by default
     }
 }
-/*
-we created a guard(this guard) that is going to fetch metadata from the custom decorator(roles.decorator) we created too
-amitav roy
-*/
+//amitav roy

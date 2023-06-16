@@ -1,6 +1,5 @@
 import { Body, Controller, Delete, Get, Param, Patch, Post, Put, UseGuards } from '@nestjs/common';
 import { Course, Prisma } from '@prisma/client';
-import { Roles } from 'src/auth/decorators/roles.decorator';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { CourseService } from './course.service';
 import { UpdateCourseDto } from './dto/create-course.dto';

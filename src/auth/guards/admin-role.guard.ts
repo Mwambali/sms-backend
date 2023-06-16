@@ -4,9 +4,9 @@ import { UserService } from "src/users/users.service";
 
 @Injectable()
 export class AdminRoleGuard implements CanActivate {
-    constructor(private userService: UserService) {}
+    constructor(private userService: UserService) { }
 
-    async canActivate(context: ExecutionContext){
+    async canActivate(context: ExecutionContext) {
         const request = context.switchToHttp().getRequest();
 
         if (request?.user) {
@@ -14,7 +14,7 @@ export class AdminRoleGuard implements CanActivate {
             const user = await this.userService.getUserById(id)
             console.log(user);
 
-            return user.role ===  UserRole.ADMIN;
+            return user.role === UserRole.ADMIN;
 
         }
 

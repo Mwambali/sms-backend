@@ -16,7 +16,6 @@ import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User, UserRole } from '@prisma/client'
 import { RegisterDto } from './dto/register.dto';
-import { Roles } from './decorators/roles.decorator';
 import { RolesGuard } from './guards/roles.guard';
 import { LoginDto } from './dto/login.dto';
 import { Response } from 'express';

@@ -11,9 +11,8 @@ import {
 } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { Prisma, Test, TestResult, User } from '.prisma/client';
-import { AdminRoleGuard } from 'src/auth/guards/admin-role.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/auth/decorators/roles.decorator';
+import { hasRoles } from 'src/auth/decorators/roles.decorator';
 import { UserService } from './users.service';
 import { CourseEnrollment } from '@prisma/client';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
@@ -49,7 +48,8 @@ export class UserController {
   //more routes      
   //get all users
 
-  @UseGuards(AuthGuard)
+  @hasRoles('Admin')
+  @UseGuards(AuthGuard, RolesGuard)
   @Get()
   async findAllUsers(): Promise<User[]> {
     return this.userService.getAllUsers()

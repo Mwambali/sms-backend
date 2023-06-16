@@ -11,6 +11,7 @@ import { LocalStrategy } from './jwt/local.strategy';
 import { UsersModule } from 'src/users/users.module';
 import { async } from 'rxjs';
 import { JwtAuthGuard } from 'common/guards/jwt-auth.guard';
+import { RolesGuard } from './guards/roles.guard';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import { JwtAuthGuard } from 'common/guards/jwt-auth.guard';
       }),
     }),
   ],
-  providers: [AuthService, LocalStrategy, PrismaService, JwtStrategy, JwtAuthGuard],
+  providers: [AuthService, LocalStrategy, PrismaService, JwtStrategy, JwtAuthGuard, RolesGuard],
   controllers: [AuthController],
   exports: [AuthService],
 })
