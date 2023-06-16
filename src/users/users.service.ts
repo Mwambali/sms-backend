@@ -16,8 +16,6 @@ export class UserService {
         name,
       },
     });
-    console.log(user);
-
     return user;
   }
 

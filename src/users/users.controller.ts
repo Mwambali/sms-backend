@@ -34,7 +34,7 @@ export class UserController {
   // }
 
   // @hasRoles('ADMIN', 'STUDENT')
-  @hasRoles(UserRole.ADMIN, UserRole.STUDENT)
+  @hasRoles(UserRole.ADMIN)
   @UseGuards(AuthGuard, RolesGuard)
   @Get()
   async findAllUsers(): Promise<User[]> {

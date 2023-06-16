@@ -61,7 +61,6 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    console.log(user);
 
     const jwt = await this.jwtService.signAsync({ user });
     return { token: jwt };
@@ -71,14 +70,12 @@ export class AuthService {
     if (!jwt) {
       throw new UnauthorizedException();
     }
-    console.log(jwt);
 
 
     try {
       const secret = this.configService.get<string>('JWT_SECRET');
 
       const { exp } = await this.jwtService.verifyAsync(jwt, { secret });
-      console.log(exp);
 
       return { exp };
     } catch (error) {

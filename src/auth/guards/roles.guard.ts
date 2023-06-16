@@ -14,9 +14,8 @@ export class RolesGuard implements CanActivate {
         // const roles = this.reflector.get<string[]>('roles', context.getHandler());
         const roles = this.reflector.get<UserRole[]>('roles', context.getHandler());
 
-        console.log('roles', roles);
-
         const request = context.switchToHttp().getRequest();
+
         if (request?.user) {
             const { id } = request.user;
             const user = await this.userService.getUserById(id)
@@ -25,9 +24,6 @@ export class RolesGuard implements CanActivate {
             return roles.includes(user.role)
 
         }
-
-
-        return false //by default
+        return true //by default
     }
 }
-//amitav roy
