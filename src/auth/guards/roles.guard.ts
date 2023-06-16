@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { UserRole } from "@prisma/client";
 import { UserService } from "src/users/users.service";
 //review
 @Injectable()
@@ -10,7 +11,8 @@ export class RolesGuard implements CanActivate {
     ) { }
 
     async canActivate(context: ExecutionContext): Promise<boolean> {
-        const roles = this.reflector.get<string[]>('roles', context.getHandler());
+        // const roles = this.reflector.get<string[]>('roles', context.getHandler());
+        const roles = this.reflector.get<UserRole[]>('roles', context.getHandler());
 
         console.log('roles', roles);
 
