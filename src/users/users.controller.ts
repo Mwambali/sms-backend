@@ -11,16 +11,15 @@ import {
 } from '@nestjs/common';
 import { AuthService } from 'src/auth/auth.service';
 import { Prisma, Test, TestResult, User } from '.prisma/client';
-import { AdminRoleGuard } from 'src/auth/guards/admin-role.guard';
 import { RolesGuard } from 'src/auth/guards/roles.guard';
-import { Roles } from 'src/auth/decorators/roles.decorator';
+import { hasRoles } from 'src/auth/decorators/roles.decorator';
 import { UserService } from './users.service';
-import { CourseEnrollment } from '@prisma/client';
+import { CourseEnrollment, UserRole } from '@prisma/client';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { CreateUserDto } from './dto/register-user.dto';
 
 @Controller('users')
 export class UserController {
-  prisma: any;
   constructor(
     private authService: AuthService,
     private userService: UserService
@@ -34,22 +33,9 @@ export class UserController {
   //   return createdUser;
   // }
 
-  // @Post('login')
-  // async login(@Body() user: User) {
-  //   const validatedUser = await this.authService.validateUser(
-  //     user.email,
-  //     user.password,
-  //   );
-  //   const loginResult = validatedUser
-  //     ? await this.authService.login(validatedUser)
-  //     : null;
-  //   return loginResult
-  // }
-
-  //more routes      
-  //get all users
-
-  @UseGuards(AuthGuard)
+  // @hasRoles('ADMIN', 'STUDENT')
+  @hasRoles(UserRole.ADMIN)
+  @UseGuards(AuthGuard, RolesGuard)
   @Get()
   async findAllUsers(): Promise<User[]> {
     return this.userService.getAllUsers()
@@ -64,13 +50,12 @@ export class UserController {
   //create user
   @Post('create')
   async createUser(
-    @Body('name') name: string,
-    @Body('email') email: string,
-    @Body('password') password: string,
+    @Body() createUserDto: CreateUserDto
   ): Promise<User> {
-    const user = await this.userService.createUser({ name, email, password });
+    const user = await this.userService.createUser(createUserDto);
     return user;
   }
+
 
   //delete user by id
   @Delete(':id')

@@ -1,13 +1,21 @@
 
 import { Injectable, Param } from '@nestjs/common';
 import { CourseEnrollment, Prisma, PrismaClient, Test, TestResult, User } from '@prisma/client';
+import { CreateUserDto } from './dto/register-user.dto';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaClient) {}
+  constructor(private prisma: PrismaClient) { }
 
-  async createUser(data: { name: string; email: string; password: string }): Promise<User> {
-    const user = await this.prisma.user.create({ data });
+  async createUser(data: CreateUserDto): Promise<User> {
+    const { firstName, lastName, ...userData } = data;
+    const name = `${firstName} ${lastName}`;
+    const user = await this.prisma.user.create({
+      data: {
+        ...userData,
+        name,
+      },
+    });
     return user;
   }
 
@@ -26,7 +34,7 @@ export class UserService {
     return users;
   }
 
- 
+
   async updateUser(
     userId: number,
     data: Prisma.UserUpdateInput,
@@ -35,23 +43,23 @@ export class UserService {
   }
 
   async deleteUser(userId: number): Promise<User> {
-    return this.prisma.user.delete({ where: { id: userId }});
+    return this.prisma.user.delete({ where: { id: userId } });
   }
 
   async getCourseEnrollments(courseId: number): Promise<CourseEnrollment[]> {
     return this.prisma.courseEnrollment.findMany({
       where: { courseId },
-      include: { 
+      include: {
         user: true,
         course: true,
-       },
+      },
     });
   }
 
   async getTests(courseId: number): Promise<Test[]> {
     return this.prisma.test.findMany({
       where: { courseId },
-      include: {course: true}
+      include: { course: true }
     });
   }
 
