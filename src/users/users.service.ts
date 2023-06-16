@@ -7,11 +7,6 @@ import { CreateUserDto } from './dto/register-user.dto';
 export class UserService {
   constructor(private prisma: PrismaClient) { }
 
-  // async createUser(data: { name: string; email: string; password: string }): Promise<User> {
-  //   const user = await this.prisma.user.create({ data });
-  //   return user;
-  // }
-
   async createUser(data: CreateUserDto): Promise<User> {
     const { firstName, lastName, ...userData } = data;
     const name = `${firstName} ${lastName}`;
@@ -21,6 +16,7 @@ export class UserService {
         name,
       },
     });
+    console.log(user);
 
     return user;
   }

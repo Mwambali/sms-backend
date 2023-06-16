@@ -1,5 +1,5 @@
 import { User } from '@prisma/client';
-import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable, Res, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ForbiddenException, HttpException, HttpStatus, Injectable, InternalServerErrorException, Res, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -10,6 +10,7 @@ import { encodePassword } from './utils/bcrypt';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime';
 import { LoginDto } from './dto/login.dto';
 import { ConfigService } from '@nestjs/config';
+import { CreateUserDto } from 'src/users/dto/register-user.dto';
 
 @Injectable()
 export class AuthService {
@@ -32,36 +33,28 @@ export class AuthService {
     return user;
   }
 
-  async registerUser(
-    userRegister: RegisterDto
-  ): Promise<User> {
-    const hash = encodePassword(userRegister.password)
-    console.log(hash);
+  async registerUser(userRegister: CreateUserDto): Promise<User> {
+    const hashedPassword = encodePassword(userRegister.password);
 
     try {
+      const createUserDto: CreateUserDto = {
+        ...userRegister,
+        password: hashedPassword,
+      };
 
-      const user = await this.prisma.user.create({
-        data: {
-          name: userRegister.name,
-          email: userRegister.email,
-          password: hash,
-        },
-      });
-
-
+      const user = await this.userService.createUser(createUserDto);
       delete user.password;
-      return await user;
-
+      return user;
     } catch (error) {
       if (error instanceof PrismaClientKnownRequestError) {
         if (error.code === 'P2002') {
-          throw new ForbiddenException('Credentials taken')
+          throw new ForbiddenException('Credentials taken');
         }
       }
+      throw new InternalServerErrorException('User registration failed');
     }
+  }
 
-
-  };
 
   async login(loginDto: LoginDto): Promise<{ token: string } | null> {
     const user = await this.validateUser(loginDto.email, loginDto.password);
