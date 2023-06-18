@@ -2,6 +2,7 @@
 import { Injectable, Param } from '@nestjs/common';
 import { CourseEnrollment, Prisma, PrismaClient, Test, TestResult, User } from '@prisma/client';
 import { CreateUserDto } from './dto/register-user.dto';
+import { log } from 'util';
 
 @Injectable()
 export class UserService {
@@ -19,8 +20,13 @@ export class UserService {
     return user;
   }
 
-  async getUserById(id: number): Promise<User> {
-    const user = await this.prisma.user.findUnique({ where: { id } });
+  async getUserById(id: string): Promise<User> {
+    const userId = parseInt(id, 10);
+    const user = await this.prisma.user.findUnique({
+      where: { id: userId }
+    });
+    console.log(user);
+
     return user;
   }
 
