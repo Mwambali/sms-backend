@@ -24,23 +24,23 @@ export class RolesGuard implements CanActivate {
         }
         const { user } = context.switchToHttp().getRequest();
 
-        // return roles.some((role) => user.role?.includes(role))
+        return roles.some((role) => user.role?.includes(role))
 
         // const user: User = request.user;
 
-        return from(this.userService.getUserById(user.id)).pipe(
-            map((user: User) => {
-                console.log(user);
+        // return from(this.userService.getUserById(user?.id)).pipe(
+        //     map((user: User) => {
+        //         console.log(user);
 
-                const hasRole = () => roles.indexOf(user.role) > -1;
-                let hasPermission: boolean = false;
-                console.log(hasRole);
-                if (hasRole()) {
-                    hasPermission = true;
-                }
-                return user && hasPermission;
-            })
-        );
+        //         const hasRole = () => roles.indexOf(user.role) > -1;
+        //         let hasPermission: boolean = false;
+        //         console.log(hasRole);
+        //         if (hasRole()) {
+        //             hasPermission = true;
+        //         }
+        //         return user && hasPermission;
+        //     })
+        // );
 
         // if (request?.user) {
         //     const { id } = request.user;

@@ -11,7 +11,7 @@ import { JwtRequest } from './jwt-request.interface';
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private configService: ConfigService,
-    // private userService: UserService,
+    private userService: UserService,
   ) {
     super({
       // jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -25,8 +25,16 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(payload: any) {
-    return { ...payload }; //was .user
+    const user = await this.userService.getUserById(payload.sub);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+    console.log(user);
+
+    return user;
   }
+  //   return { ...payload.user }; //was .user
+  // }
   // async validate(id: number) {
   //   return this.userService.getUserById(id);
   //}
