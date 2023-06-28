@@ -52,13 +52,13 @@ export class AuthController {
   }
 
   //an authenticated route
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Get('user')
   async user(@Request() req): Promise<any> {
     return req.user;
   }
 
-  @UseGuards(JwtAuthGuard)
+  // @UseGuards(JwtAuthGuard)
   @Post('verify-jwt')
   @HttpCode(HttpStatus.OK)
   async verifyJwt(@Body() payload: { jwt: string }) {

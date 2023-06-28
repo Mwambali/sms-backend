@@ -36,7 +36,7 @@ export class UserController {
   // @hasRoles('ADMIN', 'STUDENT')
   // @hasRoles(UserRole.ADMIN)
   // @UseGuards(AuthGuard, RolesGuard)
-  @UseGuards(AuthGuard)
+  // @UseGuards(AuthGuard)
   @Get()
   async findAllUsers(): Promise<User[]> {
     return this.userService.getAllUsers()

@@ -18,6 +18,6 @@ export class CreateUserDto {
   @MinLength(8)
   password: string;
 
-  @IsNotEmpty()
-  role: UserRole;
+  // @IsNotEmpty()
+  // role: UserRole;
 }
