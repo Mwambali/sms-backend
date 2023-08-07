@@ -17,6 +17,13 @@ export class ClassController {
         return this.classService.getAllClasses();
     }
 
+    @Get('/:id')
+    getClassById(
+        @Param('id') id: string
+    ) {
+        return this.classService.getClassById(id);
+    }
+
     // @Patch('/update/:slug')
     // async updateClass(@Body() updateClassDto: UpdateClassDto) {
     //     try {

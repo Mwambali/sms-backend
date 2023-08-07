@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Class, Prisma } from '@prisma/client';
+import { Class, Course, Prisma } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateClassDto, UpdateClassDto } from './dto/class.dto';
 import slugify from 'slugify';
@@ -31,6 +31,14 @@ export class ClassService {
 
     async getAllClasses(): Promise<Class[]> {
         return this.prisma.class.findMany();
+    }
+
+    async getClassById(id: string): Promise<Class> {
+        const classId = parseInt(id, 10);
+
+        return this.prisma.class.findUnique({
+            where: { id: classId },
+        });
     }
 
     // async updateClassBySlug(updateClassDto: UpdateClassDto) {
@@ -71,7 +79,17 @@ export class ClassService {
 
         return { success: true };
     }
+
+    // async getCoursesByClass(classId: string): Promise<Course[]> {
+    //     const classWithCourses = await this.prisma.class.findUnique({
+    //         where: { id: parseInt(classId, 10) },
+    //         include: { courses: true }, // Assuming the relation name is 'courses'
+    //     });
+
+    //     return classWithCourses?.courses || [];
 }
+
+
 
 function Slugify(input: string): string {
     return slugify(input, {

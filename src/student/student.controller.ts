@@ -16,6 +16,13 @@ export class StudentController {
         return this.studentService.getAllStudents();
     }
 
+    @Get('/:id')
+    getStudentById(
+        @Param('id') id: string
+    ) {
+        return this.studentService.getStudentById(id);
+    }
+
     @Patch('/update/:id')
     updateStudent(
         @Param('id') id: string,
