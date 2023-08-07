@@ -38,7 +38,7 @@ export class StudentService {
     }
 
 
-    async getCourse(id: string): Promise<Student> {
+    async getStudentById(id: string): Promise<Student> {
         const studentId = parseInt(id, 10);
 
         return this.prisma.student.findUnique({
